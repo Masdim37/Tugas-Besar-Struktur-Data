@@ -2,9 +2,10 @@
 
 using namespace std;
 
-bool LoginUserAdmin(string UsernameAdmin, string PasswordAdmin, bool PasswordValid, bool UsernameValid){
-    UsernameValid = true;
-    PasswordValid = true;
+bool UsernameValid = true;
+bool PasswordValid = true;
+
+void LoginUserAdmin(string UsernameAdmin, string PasswordAdmin){
     if(UsernameAdmin == "AdminToko1"){
         if(PasswordAdmin == "AdminPakaian1"){
             cout << "Anda login sebagai AdminToko1" << endl;
@@ -26,13 +27,9 @@ bool LoginUserAdmin(string UsernameAdmin, string PasswordAdmin, bool PasswordVal
         cout << "Silahkan masukkan username kembali" << endl;
         UsernameValid = false;
     } 
-    return UsernameValid;
-    return PasswordValid;
 }
 
-bool LoginUserCustomer(string UsernameCustomer, string PasswordCustomer, bool PasswordValid, bool UsernameValid){
-    UsernameValid = true;
-    PasswordValid = true;
+void LoginUserCustomer(string UsernameCustomer, string PasswordCustomer){
     if(UsernameCustomer == "Joshua"){
         if(PasswordCustomer == "2311102133"){
             cout << "Selamat datang Joshua!" << endl;
@@ -62,17 +59,13 @@ bool LoginUserCustomer(string UsernameCustomer, string PasswordCustomer, bool Pa
         cout << "Silahkan masukkan username kembali" << endl;
         UsernameValid = false;
     }
-
-    return UsernameValid;
-    return PasswordValid;
 }
 
 int main(){
     int PilihanLogin, i;
     string UsernameAdmin, PasswordAdmin;
     string UsernameCostumer, PasswordCustomer;
-    bool UsernameValid = true;
-    bool PasswordValid = true;
+    
     cout << "----- TOKO PAKAIAN [.....] -----" << endl;
     cout << "Menjual ..., ..., ..., ..." << endl;
     cout << endl;
@@ -89,8 +82,8 @@ int main(){
         MasukkanPasswordAdmin:
         cout << "Masukkan password = ";
         cin >> PasswordAdmin;
-        LoginUserAdmin(UsernameAdmin, PasswordAdmin, PasswordValid, UsernameValid);
-        if(PasswordValid == false){
+        LoginUserAdmin(UsernameAdmin, PasswordAdmin);
+        if(PasswordValid = false){
             for(i = 2; i > 0; i--){
                 cout << "Tersisa " << i << " kesempatan untuk login kembali" << endl;
                 goto MasukkanPasswordAdmin;
@@ -100,7 +93,7 @@ int main(){
                 cout << "Silahkan buka ulang aplikasi" << endl;
                 return 0;
             }
-        } else if(UsernameValid == false){
+        } else if(UsernameValid = false){
             goto MasukkanUsernameAdmin;
         }
     } else if(PilihanLogin = 2){
@@ -110,10 +103,10 @@ int main(){
         MasukkanPasswordCostumer:
         cout << "Masukkan password = ";
         cin >> PasswordCustomer;
-        LoginUserCustomer(UsernameCostumer, PasswordCustomer, PasswordValid, UsernameValid);
-        if(PasswordValid == false){
+        LoginUserCustomer(UsernameCostumer, PasswordCustomer);
+        if(PasswordValid = false){
             goto MasukkanPasswordCostumer;
-        } else if(UsernameValid == false){
+        } else if(UsernameValid = false){
             goto MasukkanUsernameCostumer;
         }
     }
