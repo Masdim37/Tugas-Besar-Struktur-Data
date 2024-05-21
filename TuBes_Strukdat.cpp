@@ -1,7 +1,142 @@
 #include <iostream>
 #include <string>
+#include <vector>
+#include <iomanip>
 
 using namespace std;
+
+const int TableSize = 100;
+
+class HashNode{
+    public:
+    string Kategori;
+    string Nama;
+    double Harga;
+
+    HashNode(string KategoriProduk, string NamaProduk, double HargaProduk){
+        this->Kategori = KategoriProduk;
+        this->Nama = NamaProduk;
+        this->Harga = HargaProduk;
+    }
+};
+
+class HashMap{
+    private:
+    vector<HashNode*> TableHash[TableSize];
+
+    public:
+    int HashFunc(string key){
+        int HashValue = 0;
+        for(char c : key){
+            HashValue += c;
+        }
+        return HashValue % TableSize;
+    }
+
+    void TambahProduk(string KategoriProduk, string NamaProduk, double HargaProduk){
+        int HashValue = HashFunc(NamaProduk);
+
+        for(auto node : TableHash[HashValue]){
+            if(node->Nama == NamaProduk){
+                node->Kategori = KategoriProduk;
+                node->Harga = HargaProduk;
+                return;
+            }
+        }
+        TableHash[HashValue].push_back(new HashNode(KategoriProduk, NamaProduk, HargaProduk));
+    }
+
+    void EditProduk(string KategoriProduk, string NamaProduk, double HargaProduk){
+        int HashValue = HashFunc(NamaProduk);
+        bool ketemu = false;
+
+        for(auto node : TableHash[HashValue]){
+            if(node->Nama == NamaProduk){
+                node->Kategori = KategoriProduk;
+                node->Harga = HargaProduk;
+                ketemu = true;
+                return;
+            }
+        }
+        if(!ketemu){ 
+            cout << "Produk " << NamaProduk << " tidak ditemukan" << endl;
+        }
+    }
+
+    void HapusProduk(string NamaProduk){
+        int HashValue = HashFunc(NamaProduk);
+
+        for(auto node = TableHash[HashValue].begin(); node != TableHash[HashValue].end(); node++){
+            if((*node)->Nama == NamaProduk){
+                TableHash[HashValue].erase(node);
+                return;
+            } else {
+                cout << "Produk " << NamaProduk << " tidak ditemukan" << endl;
+            }
+        }
+    }
+
+    void SearchByCategory(string KategoriProduk){
+        bool ketemu = false;
+        int nomor = 1;
+        
+        cout << "--- KATEGORI " << KategoriProduk << " ---" << endl;
+        for(int i = 0; i < TableSize; i++){
+            for(auto node : TableHash[i]){
+                if(node->Kategori == KategoriProduk){
+                    cout << nomor << ". " << node->Nama << '\t' << "Rp." << node->Harga << endl;
+                    nomor++;
+                    ketemu = true;
+                }
+            }
+        }
+        if(!ketemu){
+            cout << "Produk dalam kategori " << KategoriProduk << " tidak tersedia" << endl;
+        }
+    }
+
+    void SearchByPrice(double HargaMin, double HargaMax){
+        bool ketemu = false;
+        int nomor = 1;
+
+        cout << " --- RENTANG HARGA " << HargaMin << " - " << HargaMax << " ---" << endl;
+        for(int i = 0; i < TableSize; i++){
+            for(auto node : TableHash[i]){
+                if(node->Harga >= HargaMin && node->Harga <= HargaMax){
+                    cout << nomor << ". " << node->Nama << '\t' << "Rp." << node->Harga << " - " << node->Kategori << endl;
+                    nomor++;
+                    ketemu = true;
+                }
+            }
+        }
+        if(!ketemu){
+            cout << "Produk dengan rentang harga " << HargaMin << " - " << HargaMax << " tidak ditemukan" << endl;
+        }
+    }
+    
+    void SearchByProductName(string NamaProduk){
+        bool ketemu = false;
+        int nomor = 1;
+
+        cout << "--- PENCARIAN NAMA PRODUK ---" << endl;
+        for(int i = 0; i < TableSize; i++){
+            for(auto node : TableHash[i]){
+                if(node->Nama == NamaProduk){
+                    cout << nomor << ". " << node->Nama << '\t' << "Rp." << node->Harga << " - " << node->Kategori << endl;
+                    nomor++;
+                    ketemu = true;
+                }
+            }
+        }
+        if(!ketemu){
+            cout << "Produk dengan nama " << NamaProduk << " tidak ditemukan" << endl;
+        }
+    }
+
+    
+};
+
+
 
 bool LoginUserAdmin(string UsernameAdmin, string PasswordAdmin, bool &PasswordValid, bool &UsernameValid) {
     UsernameValid = true;
