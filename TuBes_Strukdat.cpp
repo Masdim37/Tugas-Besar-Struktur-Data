@@ -205,11 +205,13 @@ public:
     void TampilProdukAdmin()
     {
         cout << "--------------------------------------------------" << endl;
-        cout << "|" << left << setw(10) << "Kategori" << "|" << left << setw(10) << "Nama" << "|" << left << setw(10) << "Harga" << "|" << left << setw(10) << "Stok" << "|" << endl;
+        cout << "|" << left << setw(15) << "Kategori" << "|" << left << setw(20) << "Nama" << "|" << left << setw(15) << "Harga" << "|" << left << setw(10) << "Stok" << "|" << endl;
         cout << "--------------------------------------------------" << endl;
-        for(int i = 0; i < TableSize; i++){
-            for(auto node : TableHash[i]){
-               cout << "|" << left << setw(10) << node->Kategori << "|" << left << setw(10) << node->Nama << "|" << left << setw(10) << node->Harga << "|" << left << setw(10) << node->Stok << "|" << endl; 
+        for (int i = 0; i < TableSize; i++)
+        {
+            for (auto node : TableHash[i])
+            {
+                cout << "|" << left << setw(15) << node->Kategori << "|" << left << setw(20) << node->Nama << "|" << left << setw(15) << "Rp. " + to_string(node->Harga) << "|" << left << setw(10) << node->Stok << "|" << endl;
             }
         }
         cout << "--------------------------------------------------" << endl;
@@ -217,15 +219,31 @@ public:
 
     void TampilProdukCustomer()
     {
-        cout << "----------------------------------------" << endl;
-        cout << "|" << left << setw(10) << "Kategori" << "|" << left << setw(10) << "Nama" << "|" << left << setw(10) << "Harga" << "|" << endl;
-        cout << "----------------------------------------" << endl;
-        for(int i = 0; i < TableSize; i++){
-            for(auto node : TableHash[i]){
-               cout << "|" << left << setw(10) << node->Kategori << "|" << left << setw(10) << node->Nama << "|" << left << setw(10) << node->Harga << "|" << endl; 
+        cout << "-----------------------------------------------" << endl;
+        cout << "|" << left << setw(15) << "Kategori" << "|" << left << setw(20) << "Nama" << "|" << left << setw(15) << "Harga" << "|" << endl;
+        cout << "-----------------------------------------------" << endl;
+        for (int i = 0; i < TableSize; i++)
+        {
+            for (auto node : TableHash[i])
+            {
+                cout << "|" << left << setw(15) << node->Kategori << "|" << left << setw(20) << node->Nama << "|" << left << setw(15) << "Rp. " + to_string(node->Harga) << "|" << endl;
             }
         }
-        cout << "----------------------------------------" << endl;
+        cout << "-----------------------------------------------" << endl;
+    }
+
+    // Metode untuk mendapatkan informasi produk berdasarkan nama
+    HashNode* GetProdukByName(string NamaProduk)
+    {
+        int HashValue = HashFunc(NamaProduk);
+        for (auto node : TableHash[HashValue])
+        {
+            if (node->Nama == NamaProduk)
+            {
+                return node;
+            }
+        }
+        return nullptr; // Mengembalikan nullptr jika produk tidak ditemukan
     }
 };
 
@@ -313,217 +331,229 @@ bool LoginUserCustomer(string UsernameCustomer, string PasswordCustomer, bool &P
     return UsernameCustomerValid && PasswordCustomerValid;
 }
 
+void CetakKwitansi(string NamaProduk, int jumlah, double Harga)
+{
+    double totalHarga = jumlah * Harga;
+    cout << "-----------------------------------------------" << endl;
+    cout << "|                   KWITANSI                  |" << endl;
+    cout << "-----------------------------------------------" << endl;
+    cout << "| Nama Produk  : " << setw(28) << left << NamaProduk << "|" << endl;
+    cout << "| Jumlah       : " << setw(28) << left << jumlah << "|" << endl;
+    cout << "| Harga Satuan : " << setw(28) << left << "Rp. " + to_string(Harga) << "|" << endl;
+    cout << "|---------------------------------------------|" << endl;
+    cout << "| Total Harga  : " << setw(28) << left << "Rp. " + to_string(totalHarga) << "|" << endl;
+    cout << "-----------------------------------------------" << endl;
+}
+
 int main()
 {
-    int PilihanLogin, i, PilihanMenuAdmin;
-    string UsernameAdmin, PasswordAdmin;
-    string UsernameCustomer, PasswordCustomer;
-    bool UsernameAdminValid = true;
+    HashMap Produk;
+    int pilih;
     bool PasswordAdminValid = true;
-    bool UsernameCustomerValid = true;
+    bool UsernameAdminValid = true;
     bool PasswordCustomerValid = true;
-    string NamaProduk, KategoriProduk;
-    double HargaProduk;
-    int StokProduk;
-    char Yakin;
-    HashMap HashtableProduk;
+    bool UsernameCustomerValid = true;
 
-    MenuLogin:
-    cout << "----- TOKO PAKAIAN [.....] -----" << endl;
-    cout << "Menjual ..., ..., ..., ..." << endl;
-    cout << endl;
-    cout << "Login sebagai : " << endl;
-    cout << "1. Customer" << endl;
-    cout << "2. Admin" << endl;
-    cout << "3. Keluar" << endl;
-    cout << "Pilihan anda [1 - 3] = ";
-    cin >> PilihanLogin;
-    cout << endl;
-
-    if (PilihanLogin == 2)
+    do
     {
-    MasukkanUsernameAdmin:
-        cout << "Masukkan username = ";
-        cin >> UsernameAdmin;
-    MasukkanPasswordAdmin:
-        cout << "Masukkan password = ";
-        cin >> PasswordAdmin;
-        LoginUserAdmin(UsernameAdmin, PasswordAdmin, PasswordAdminValid, UsernameAdminValid);
+        cout << "================================================" << endl;
+        cout << "|                 LOGIN                        |" << endl;
+        cout << "================================================" << endl;
+        cout << "| 1. Admin                                     |" << endl;
+        cout << "| 2. Customer                                  |" << endl;
+        cout << "| 3. Keluar                                    |" << endl;
+        cout << "================================================" << endl;
+        cout << "Pilih : ";
+        cin >> pilih;
 
-        if (!PasswordAdminValid)
+        switch (pilih)
         {
-            for (i = 2; i >= 0; i--)
-            {
-                cout << "Tersisa " << i << " kesempatan untuk login kembali" << endl;
-                cout << endl;
-                goto MasukkanPasswordAdmin;
-            }
-            if (i == 0)
-            {
-                cout << "Anda telah gagal 3 kali untuk login sebagai admin" << endl;
-                cout << "Silahkan buka ulang aplikasi" << endl;
-                return 0;
-            }
-        }
-        else if (!UsernameAdminValid)
-        {
-            goto MasukkanUsernameAdmin;
-        }
-
-        cout << endl;
-        if (UsernameAdminValid && PasswordAdminValid)
-        {
+        case 1:
             do
             {
-                cout << "--- ADMIN MENU ---" << endl;
-                cout << "1. Tambah Produk" << endl;
-                cout << "2. Update Produk" << endl;
-                cout << "3. Hapus Produk" << endl;
-                cout << "4. Tampilkan Produk dan Stoknya" << endl;
-                cout << "5. Kembali ke menu login" << endl;
-                cout << "Masukkan pilihan [1 - 5] = ";
-                cin >> PilihanMenuAdmin;
-                cout << endl;
+                string UsernameAdmin;
+                string PasswordAdmin;
+                cout << "Username : ";
+                cin >> UsernameAdmin;
+                cout << "Password : ";
+                cin >> PasswordAdmin;
 
-                switch (PilihanMenuAdmin)
+                if (LoginUserAdmin(UsernameAdmin, PasswordAdmin, PasswordAdminValid, UsernameAdminValid))
                 {
-                case 1:
-                    cout << "--- TAMBAH PRODUK ---" << endl;
-                    cout << "Masukkan kategori produk yang ingin ditambahkan = ";
-                    cin.ignore();
-                    cin >> KategoriProduk;
-                    cout << "Masukkan nama produk yang ingin ditambahkan = ";
-                    cin.ignore();
-                    getline(cin, NamaProduk);
-                    cout << "Masukkan harga produk = ";
-                    cin >> HargaProduk;
-                    cout << "Masukkan stok produk = ";
-                    cin >> StokProduk;
-                    HashtableProduk.TambahProduk(KategoriProduk, NamaProduk, HargaProduk, StokProduk);
-                    cout << "Produk " << NamaProduk << " berhasil ditambahkan!" << endl;
-                    cout << endl;
-                    break;
-                case 2:
-                    if (HashtableProduk.isEmpty() == false)
+                    int pilihAdmin;
+                    do
                     {
-                        cout << "--- UPDATE PRODUK ---" << endl;
-                        cout << "Masukkan nama produk yang ingin diupdate = ";
-                        cin.ignore();
-                        getline(cin, NamaProduk);
-                        if(HashtableProduk.CekNamaProduk(NamaProduk) == true){
-                            cout << "Masukkan detail produk (ketik ulang jika tidak ingin mengubah)" << endl;
-                            cout << "Masukkan kategori produk = ";
-                            cin >> KategoriProduk;
-                            cout << "Masukkan harga produk = ";
-                            cin >> HargaProduk;
-                            cout << "Masukkan stok produk = ";
-                            cin >> StokProduk;
-                            HashtableProduk.UpdateProduk(KategoriProduk, NamaProduk, HargaProduk, StokProduk);
-                            cout << "Detail produk " << NamaProduk << " berhasil diupdate!" << endl;
-                            cout << endl;
-                        }
-                        else
+                        cout << "================================================" << endl;
+                        cout << "|                 ADMIN MENU                   |" << endl;
+                        cout << "================================================" << endl;
+                        cout << "| 1. Tambah Produk                             |" << endl;
+                        cout << "| 2. Update Produk                             |" << endl;
+                        cout << "| 3. Hapus Produk                              |" << endl;
+                        cout << "| 4. Tampilkan Semua Produk                    |" << endl;
+                        cout << "| 5. Logout                                    |" << endl;
+                        cout << "================================================" << endl;
+                        cout << "Pilih : ";
+                        cin >> pilihAdmin;
+
+                        switch (pilihAdmin)
                         {
-                            cout << "Produk tidak ditemukan!" << endl;
-                            cout << endl;
+                        case 1:
+                        {
+                            string kategori, nama;
+                            double harga;
+                            int stok;
+                            cout << "Kategori Produk : ";
+                            cin >> kategori;
+                            cout << "Nama Produk : ";
+                            cin >> nama;
+                            cout << "Harga Produk : ";
+                            cin >> harga;
+                            cout << "Stok Produk : ";
+                            cin >> stok;
+                            Produk.TambahProduk(kategori, nama, harga, stok);
+                            break;
                         }
-                    }
-                    else
-                    {
-                        cout << "List produk masih kosong!" << endl;
-                        cout << "Tambahkan produk terlebih dahulu!" << endl;
-                        cout << endl;
-                    }
-                    break;
-                case 3:
-                    if (HashtableProduk.isEmpty() == false)
-                    {
-                        cout << "--- HAPUS PRODUK ---" << endl;
-                        cout << "Masukkan nama produk yang ingin dihapus = ";
-                        cin.ignore();
-                        getline(cin, NamaProduk);
-                        if(HashtableProduk.CekNamaProduk(NamaProduk) == true){
-                            cout << "Apakah anda yakin ingin menghapus produk " << NamaProduk << "? [y/n] = ";
-                            cin >> Yakin;
-                            if (Yakin == 'Y' || Yakin == 'y')
+                        case 2:
+                        {
+                            string kategori, nama;
+                            double harga;
+                            int stok;
+                            cout << "Nama Produk yang akan di-update: ";
+                            cin >> nama;
+                            if (Produk.CekNamaProduk(nama))
                             {
-                                HashtableProduk.HapusProduk(NamaProduk);
-                                cout << "Produk berhasil dihapus!" << endl;
-                                cout << endl;
+                                cout << "Kategori Produk : ";
+                                cin >> kategori;
+                                cout << "Harga Produk : ";
+                                cin >> harga;
+                                cout << "Stok Produk : ";
+                                cin >> stok;
+                                Produk.UpdateProduk(kategori, nama, harga, stok);
                             }
-                            else if (Yakin == 'N' || Yakin == 'n')
-                            {
-                                cout << "Aksi dibatalkan!" << endl;
-                                cout << endl;
-                            }
-                        } else {
-                            cout << "Produk tidak ditemukan!" << endl;
-                            cout << endl;
+                            break;
                         }
-                    } else {
-                        cout << "List produk masih kosong!" << endl;
-                        cout << "Tambahkan produk terlebih dahulu!" << endl;
-                        cout << endl;
-                    }
-                    break;
-                case 4:
-                    if(HashtableProduk.isEmpty() == false){
-                        cout << "--- TAMPILKAN PRODUK ---" << endl;
-                        HashtableProduk.TampilProdukAdmin();
-                        cout << endl;
-                    } else {
-                        cout << "List produk masih kosong!" << endl;
-                        cout << "Tambahkan produk terlebih dahulu!" << endl;
-                        cout << endl;
-                    }
-                    break;
-                case 5:
-                    goto MenuLogin;
-                    break;
-                default:
-                    cout << "Pilihan yang anda masukkan tidak valid!" << endl;
-                    cout << endl;
-                    break;
+                        case 3:
+                        {
+                            string nama;
+                            cout << "Nama Produk yang akan dihapus: ";
+                            cin >> nama;
+                            Produk.HapusProduk(nama);
+                            break;
+                        }
+                        case 4:
+                            Produk.TampilProdukAdmin();
+                            break;
+                        case 5:
+                            cout << "Logout berhasil." << endl;
+                            break;
+                        default:
+                            cout << "Pilihan tidak valid. Silakan coba lagi." << endl;
+                        }
+                    } while (pilihAdmin != 5);
                 }
-            } while (PilihanMenuAdmin >= 0);
-        }
-    }
-    else if (PilihanLogin == 1)
-    {
-    MasukkanUsernameCustomer:
-        cout << "Masukkan username anda = ";
-        cin >> UsernameCustomer;
-    MasukkanPasswordCustomer:
-        cout << "Masukkan password = ";
-        cin >> PasswordCustomer;
-        LoginUserCustomer(UsernameCustomer, PasswordCustomer, PasswordCustomerValid, UsernameCustomerValid);
+            } while (!PasswordAdminValid || !UsernameAdminValid);
+            break;
+        case 2:
+            do
+            {
+                string UsernameCustomer;
+                string PasswordCustomer;
+                cout << "Username : ";
+                cin >> UsernameCustomer;
+                cout << "Password : ";
+                cin >> PasswordCustomer;
 
-        if (!PasswordCustomerValid)
-        {
-            goto MasukkanPasswordCustomer;
-        }
-        else if (!UsernameCustomerValid)
-        {
-            goto MasukkanUsernameCustomer;
-        }
+                if (LoginUserCustomer(UsernameCustomer, PasswordCustomer, PasswordCustomerValid, UsernameCustomerValid))
+                {
+                    int pilihCustomer;
+                    do
+                    {
+                        cout << "================================================" << endl;
+                        cout << "|                CUSTOMER MENU                 |" << endl;
+                        cout << "================================================" << endl;
+                        cout << "| 1. Lihat Semua Produk                        |" << endl;
+                        cout << "| 2. Cari Produk Berdasarkan Kategori          |" << endl;
+                        cout << "| 3. Cari Produk Berdasarkan Harga             |" << endl;
+                        cout << "| 4. Cari Produk Berdasarkan Nama              |" << endl;
+                        cout << "| 5. Beli Produk                               |" << endl;
+                        cout << "| 6. Logout                                    |" << endl;
+                        cout << "================================================" << endl;
+                        cout << "Pilih : ";
+                        cin >> pilihCustomer;
 
-        
-    } else if(PilihanLogin == 3){
-        cout << "Apakah anda yakin ingin keluar dari aplikasi? [y/n] = ";
-        cin >> Yakin;
-        if(Yakin == 'Y' || Yakin == 'y'){
-            cout << "Anda keluar dari aplikasi" << endl;
-            return 0;
-        } else if(Yakin == 'N' || Yakin == 'n'){
-            cout << "Aksi dibatalkan" << endl;
-            cout << endl;
-            goto MenuLogin;
-        }
+                        switch (pilihCustomer)
+                        {
+                        case 1:
+                            Produk.TampilProdukCustomer();
+                            break;
+                        case 2:
+                        {
+                            string kategori;
+                            cout << "Masukkan kategori: ";
+                            cin >> kategori;
+                            Produk.SearchByCategory(kategori);
+                            break;
+                        }
+                        case 3:
+                        {
+                            double hargaMin, hargaMax;
+                            cout << "Masukkan harga minimum: ";
+                            cin >> hargaMin;
+                            cout << "Masukkan harga maksimum: ";
+                            cin >> hargaMax;
+                            Produk.SearchByPrice(hargaMin, hargaMax);
+                            break;
+                        }
+                        case 4:
+                        {
+                            string nama;
+                            cout << "Masukkan nama produk: ";
+                            cin >> nama;
+                            Produk.SearchByProductName(nama);
+                            break;
+                        }
+                        case 5:
+                        {
+                            string nama;
+                            int jumlah;
+                            cout << "Masukkan nama produk yang ingin dibeli: ";
+                            cin >> nama;
+                            if (Produk.CekNamaProduk(nama))
+                            {
+                                double harga;
+                                cout << "Masukkan jumlah produk yang ingin dibeli: ";
+                                cin >> jumlah;
 
-    } else {
-        cout << "Pilihan anda tidak valid!" << endl;
-        goto MenuLogin;
-    }
+                                HashNode* produk = Produk.GetProdukByName(nama);
+                                if (produk != nullptr)
+                                {
+                                    harga = produk->Harga;
+                                    CetakKwitansi(nama, jumlah, harga);
+                                }
+                                else
+                                {
+                                    cout << "Produk tidak ditemukan!" << endl;
+                                }
+                            }
+                            break;
+                        }
+                        case 6:
+                            cout << "Logout berhasil." << endl;
+                            break;
+                        default:
+                            cout << "Pilihan tidak valid. Silakan coba lagi." << endl;
+                        }
+                    } while (pilihCustomer != 6);
+                }
+            } while (!PasswordCustomerValid || !UsernameCustomerValid);
+            break;
+        case 3:
+            cout << "Terima kasih! Sampai jumpa lagi." << endl;
+            break;
+        default:
+            cout << "Pilihan tidak valid. Silakan coba lagi." << endl;
+        }
+    } while (pilih != 3);
 
     return 0;
 }
