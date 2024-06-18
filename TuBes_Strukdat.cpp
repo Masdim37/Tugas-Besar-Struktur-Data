@@ -113,6 +113,22 @@ public:
         }
     }
 
+    double TambahHargaProduk(string NamaProduk)
+    {
+        double Harga;
+        int HashValue = HashFunc(NamaProduk);
+
+        for (auto node : TableHash[HashValue])
+        {
+            if (node->Nama == NamaProduk)
+            {
+                Harga = node->Harga;
+            }
+        }
+
+        return Harga;
+    }
+
     void HapusProduk(string NamaProduk)
     {
         int HashValue = HashFunc(NamaProduk);
@@ -217,7 +233,7 @@ public:
     }
 
     // Metode untuk mendapatkan informasi produk berdasarkan nama
-    HashNode* GetProdukByName(string NamaProduk)
+    HashNode *GetProdukByName(string NamaProduk)
     {
         int HashValue = HashFunc(NamaProduk);
         for (auto node : TableHash[HashValue])
@@ -332,19 +348,13 @@ bool LoginUserCustomer(string UsernameCustomer, string PasswordCustomer, bool &P
     return UsernameCustomerValid && PasswordCustomerValid;
 }
 
-void CetakKwitansi(string NamaProduk, int jumlah, double Harga)
-{
-    double totalHarga = jumlah * Harga;
-    cout << "-----------------------------------------------" << endl;
-    cout << "|                   KWITANSI                  |" << endl;
-    cout << "-----------------------------------------------" << endl;
-    cout << "| Nama Produk  : " << setw(28) << left << NamaProduk << "|" << endl;
-    cout << "| Jumlah       : " << setw(28) << left << jumlah << "|" << endl;
-    cout << "| Harga Satuan : " << setw(28) << left << "Rp. " + to_string(Harga) << "|" << endl;
-    cout << "|---------------------------------------------|" << endl;
-    cout << "| Total Harga  : " << setw(28) << left << "Rp. " + to_string(totalHarga) << "|" << endl;
-    cout << "-----------------------------------------------" << endl;
+double HargaDiskon(double TotalHarga) {
+    double HargaDiskon;
+    HargaDiskon = TotalHarga * 0.15;
+    
+    return HargaDiskon;
 }
+
 
 int main()
 {
@@ -356,8 +366,8 @@ int main()
     bool UsernameCustomerValid = true;
 
     do
-    {   
-        MenuLogin:
+    {
+    MenuLogin:
         cout << "================================================" << endl;
         cout << "|                 LOGIN                        |" << endl;
         cout << "================================================" << endl;
@@ -418,11 +428,14 @@ int main()
                             cin >> stok;
                             cout << "Apakah anda yakin ingin menambahkan produk " << nama << "? [y/n] = ";
                             cin >> Yakin;
-                            if(Yakin == 'Y' || Yakin == 'y'){
+                            if (Yakin == 'Y' || Yakin == 'y')
+                            {
                                 Produk.TambahProduk(kategori, nama, harga, stok);
                                 cout << "Produk " << nama << " berhasil ditambahkan!" << endl;
                                 cout << endl;
-                            } else if(Yakin == 'N' || Yakin == 'n'){
+                            }
+                            else if (Yakin == 'N' || Yakin == 'n')
+                            {
                                 cout << "Aksi dibatalkan!" << endl;
                                 cout << endl;
                             }
@@ -430,12 +443,13 @@ int main()
                         }
                         case 2:
                         {
-                            if(Produk.isEmpty() == false){
+                            if (Produk.isEmpty() == false)
+                            {
                                 string kategori, nama;
                                 double harga;
                                 int stok;
                                 char Yakin;
-                                UpdateProduk:
+                            UpdateProduk:
                                 cout << "Nama Produk yang akan di-update = ";
                                 cin.ignore();
                                 getline(cin, nama);
@@ -451,17 +465,22 @@ int main()
                                     cin >> stok;
                                     cout << "Apakah data yang dimasukkan sudah benar? [y/n] = ";
                                     cin >> Yakin;
-                                    if(Yakin == 'Y' || Yakin == 'y'){
+                                    if (Yakin == 'Y' || Yakin == 'y')
+                                    {
                                         Produk.UpdateProduk(kategori, nama, harga, stok);
                                         cout << "Data produk " << nama << " berhasil diupdate!" << endl;
                                         cout << endl;
-                                    } else if(Yakin == 'N' || Yakin == 'n'){
+                                    }
+                                    else if (Yakin == 'N' || Yakin == 'n')
+                                    {
                                         cout << "Silahkan masukkan ulang data yang ingin diupdate!" << endl;
                                         cout << endl;
                                         goto UpdateProduk;
                                     }
                                 }
-                            } else {
+                            }
+                            else
+                            {
                                 cout << "List produk masih kosong!" << endl;
                                 cout << "Tambahkan produk terlebih dahulu!" << endl;
                                 cout << endl;
@@ -470,25 +489,32 @@ int main()
                         }
                         case 3:
                         {
-                            if(Produk.isEmpty() == false){
+                            if (Produk.isEmpty() == false)
+                            {
                                 string nama;
                                 char Yakin;
                                 cout << "Nama Produk yang akan dihapus = ";
                                 cin.ignore();
                                 getline(cin, nama);
-                                if(Produk.CekNamaProduk(nama) == true){
+                                if (Produk.CekNamaProduk(nama) == true)
+                                {
                                     cout << "Apakah anda yakin ingin menghapus produk " << nama << "? [y/n] = ";
                                     cin >> Yakin;
-                                    if(Yakin == 'Y' || Yakin == 'y'){
+                                    if (Yakin == 'Y' || Yakin == 'y')
+                                    {
                                         Produk.HapusProduk(nama);
                                         cout << "Produk " << nama << " berhasil dihapus!" << endl;
                                         cout << endl;
-                                    } else if(Yakin == 'N' || Yakin == 'n'){
+                                    }
+                                    else if (Yakin == 'N' || Yakin == 'n')
+                                    {
                                         cout << "Aksi dibatalkan!" << endl;
                                         cout << endl;
                                     }
                                 }
-                            } else {
+                            }
+                            else
+                            {
                                 cout << "List produk masih kosong!" << endl;
                                 cout << "Tambahkan produk terlebih dahulu!" << endl;
                                 cout << endl;
@@ -496,9 +522,12 @@ int main()
                             break;
                         }
                         case 4:
-                            if(Produk.isEmpty() == false){
+                            if (Produk.isEmpty() == false)
+                            {
                                 Produk.TampilProdukAdmin();
-                            } else {
+                            }
+                            else
+                            {
                                 cout << "List produk masih kosong!" << endl;
                                 cout << "Tambahkan produk terlebih dahulu!" << endl;
                                 cout << endl;
@@ -568,35 +597,123 @@ int main()
                             cin.ignore();
                             getline(cin, nama);
                             cout << endl;
-                            if(Produk.CekNamaProduk(nama) == true){
+                            if (Produk.CekNamaProduk(nama) == true)
+                            {
                                 Produk.SearchByProductName(nama);
                             }
                             break;
                         }
                         case 4:
                         {
-                            string nama;
+                            string nama, KodeVoucher;
+                            int i = 0;
                             int jumlah;
-                            cout << "Masukkan nama produk yang ingin dibeli = ";
-                            cin >> nama;
-                            if (Produk.CekNamaProduk(nama))
-                            {
-                                double harga;
-                                cout << "Masukkan jumlah produk yang ingin dibeli = ";
-                                cin >> jumlah;
+                            char Yakin, YakinVoucher;
+                            string NamaProdukBeli[100];
+                            int HargaProdukBeli[100];
+                            int TotalHarga;
+                            int JumlahProdukBeli[100];
+                            string DataPribadi[3];
+                            HashNode *beliproduk;
 
-                                HashNode* produk = Produk.GetProdukByName(nama);
-                                if (produk != nullptr)
+                            cout << "Sebelum membeli barang, isi data pribadi anda terlebih dahulu!" << endl;
+                            cout << "Nama = ";
+                            cin.ignore();
+                            getline(cin, DataPribadi[0]);
+                            cout << "Nomor telepon = ";
+                            cin >> DataPribadi[1];
+                            cout << "Email = ";
+                            cin >> DataPribadi[2];
+                            cout << endl;
+
+                            bool stop = false;
+                            Produk.TampilProdukCustomer();
+                            while(stop == false){
+                                InputBelanjaan:
+                                cout << "Masukkan nama produk yang ingin dibeli = ";
+                                cin.ignore();
+                                getline(cin, nama);
+                                if (Produk.CekNamaProduk(nama) == true)
                                 {
-                                    harga = produk->Harga;
-                                    CetakKwitansi(nama, jumlah, harga);
-                                }
-                                else
-                                {
-                                    cout << "Produk tidak ditemukan!" << endl;
+                                    cout << "Masukkan jumlah produk yang ingin dibeli = ";
+                                    cin >> jumlah;
+                                    beliproduk = Produk.GetProdukByName(nama);
+                                    NamaProdukBeli[i] = beliproduk->Nama;
+                                    HargaProdukBeli[i] = beliproduk->Harga * jumlah;
+                                    JumlahProdukBeli[i] = jumlah;
+                                    cout << "Apakah anda ingin membeli produk lain? [y/n] = ";
+                                    cin >> Yakin;
+                                    if (Yakin == 'Y' || Yakin == 'y')
+                                    {
+                                        i++;
+                                    }
+                                    else if (Yakin == 'N' || Yakin == 'n')
+                                    {
+                                        stop = true;
+                                    }
                                     cout << endl;
+                                } else {
+                                    cout << "Silahkan masukkan kembali produk yang ingin dibeli" << endl;
+                                    goto InputBelanjaan;
                                 }
                             }
+
+                            int JumlahProdukYangDibeli = sizeof(NamaProdukBeli) / sizeof(*NamaProdukBeli);
+                            cout << "-----------------------------------------------" << endl;
+                            cout << "|              RINCIAN PEMBELIAN              |" << endl;
+                            cout << "-----------------------------------------------" << endl;
+                            cout << "Pesanan anda =                                 " << endl;
+                            for (int i = 0; i < JumlahProdukYangDibeli && !NamaProdukBeli[i].empty(); i++)
+                            {
+                                cout << "  " << NamaProdukBeli[i] << " x " << JumlahProdukBeli[i] << endl;
+                                cout << "  " << '\t' << "Total = Rp. " << HargaProdukBeli[i] << endl;
+                                TotalHarga += HargaProdukBeli[i];
+                            }
+                            cout << "-----------------------------------------------" << endl;
+                            cout << "  TOTAL = " << TotalHarga << endl;
+                            cout << "-----------------------------------------------" << endl;
+                            cout << "Apakah anda memiliki kode voucher? [y/n] = ";
+                            cin >> YakinVoucher;
+                            if(YakinVoucher == 'Y' || YakinVoucher == 'y'){
+                                cout << "Masukkan kode voucher = ";
+                                cin >> KodeVoucher;
+                                if(KodeVoucher == "IF11D"){
+                                    cout << "Selamat anda mendapat diskon 15%" << endl;
+                                } else {
+                                    cout << "Kode voucher salah, anda tidak mendapat diskon" << endl;
+                                }
+                            } else if(YakinVoucher == 'N' || YakinVoucher == 'n'){
+                                cout << "Anda tidak mendapat diskon" << endl;
+                            }
+                            cout << endl;
+                            
+                            cout << "-----------------------------------------------" << endl;
+                            cout << "|                   KWITANSI                  |" << endl;
+                            cout << "-----------------------------------------------" << endl;
+                            cout << "Nama = " << setw(13) << left << DataPribadi[0] << endl;
+                            cout << "Nomor telepon = " << DataPribadi[1] << endl;
+                            cout << "Email = " << setw(11) << left << DataPribadi[2] << endl;
+                            cout << "-----------------------------------------------" << endl;
+                            cout << "Pesanan anda = " << endl;
+                            for (int i = 0; i < JumlahProdukYangDibeli && !NamaProdukBeli[i].empty(); i++)
+                            {
+                                cout << "  " << NamaProdukBeli[i] << " x " << JumlahProdukBeli[i] << endl;
+                                cout << "  " << '\t' << "Total = Rp. " << HargaProdukBeli[i] << endl;
+                            }
+                            cout << "-----------------------------------------------" << endl;
+                            if(KodeVoucher == "IF11D"){
+                                cout << "Anda mendapat diskon 15%" << endl;
+                                cout << "TOTAL = Rp. " << TotalHarga - HargaDiskon(TotalHarga) << endl;
+                                cout << "-----------------------------------------------" << endl;
+                                cout << "         TERIMAKASIH TELAH BERBELANJA          " << endl;
+                                cout << "-----------------------------------------------" << endl;
+                            } else {
+                                cout << "TOTAL = Rp. " << TotalHarga << endl;
+                                cout << "-----------------------------------------------" << endl;
+                                cout << "         TERIMAKASIH TELAH BERBELANJA          " << endl;
+                                cout << "-----------------------------------------------" << endl;
+                            }
+                            return 0;
                             break;
                         }
                         case 5:
@@ -616,9 +733,12 @@ int main()
             char Yakin;
             cout << "Apakah anda yakin ingin keluar dari aplikasi? [y/n] = ";
             cin >> Yakin;
-            if(Yakin == 'Y' || Yakin == 'y'){
+            if (Yakin == 'Y' || Yakin == 'y')
+            {
                 cout << "Terima kasih! Sampai jumpa lagi." << endl;
-            } else if(Yakin == 'N' || 'n'){
+            }
+            else if (Yakin == 'N' || 'n')
+            {
                 cout << "Aksi dibatalkan" << endl;
                 cout << endl;
                 goto MenuLogin;
