@@ -361,10 +361,10 @@ int main()
     bool UsernameAdminValid = true;
     bool PasswordCustomerValid = true;
     bool UsernameCustomerValid = true;
-
+    
     do
     {
-    MenuLogin:
+    MenuLogin: 
         cout << "================================================" << endl;
         cout << "|                 LOGIN                        |" << endl;
         cout << "================================================" << endl;
@@ -378,7 +378,7 @@ int main()
 
         switch (pilih)
         {
-        case 1:
+        case 1: //dhimas start
             do
             {
                 string UsernameAdmin;
@@ -542,8 +542,8 @@ int main()
                     } while (pilihAdmin != 5);
                 }
             } while (!PasswordAdminValid || !UsernameAdminValid);
-            break;
-        case 2:
+            break; //dhimas end
+        case 2: //nanda start
             do
             {
                 string UsernameCustomer;
@@ -598,9 +598,9 @@ int main()
                             {
                                 Produk.SearchByProductName(nama);
                             }
-                            break;
+                            break; //nanda end
                         }
-                        case 4:
+                        case 4: //joshua start
                         {
                             string nama, KodeVoucher;
                             int i = 0;
@@ -711,9 +711,9 @@ int main()
                                 cout << "-----------------------------------------------" << endl;
                             }
                             return 0;
-                            break;
+                            break; //joshua end
                         }
-                        case 5:
+                        case 5: //nanda #2 start
                             cout << "Logout berhasil." << endl;
                             cout << endl;
                             goto MenuLogin;
@@ -721,12 +721,12 @@ int main()
                         default:
                             cout << "Pilihan tidak valid. Silakan coba lagi." << endl;
                             cout << endl;
-                        }
-                    } while (pilihCustomer != 6);
+                        } 
+                    } while (pilihCustomer != 6); //nanda #2 end
                 }
             } while (!PasswordCustomerValid || !UsernameCustomerValid);
             break;
-        case 3:
+        case 3: //nanda #3 start
             char Yakin;
             cout << "Apakah anda yakin ingin keluar dari aplikasi? [y/n] = ";
             cin >> Yakin;
@@ -740,7 +740,7 @@ int main()
                 cout << endl;
                 goto MenuLogin;
             }
-            break;
+            break; //nanda #3 end
         default:
             cout << "Pilihan tidak valid. Silakan coba lagi." << endl;
         }
