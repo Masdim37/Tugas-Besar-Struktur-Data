@@ -40,6 +40,7 @@ public:
         return HashValue % TableSize;
     }
 
+    //dhimas
     bool isEmpty()
     {
         for (int i = 0; i < TableSize; i++)
@@ -52,6 +53,7 @@ public:
         return true;
     }
 
+    //dhimas
     void TambahProduk(string KategoriProduk, string NamaProduk, double HargaProduk, int StokProduk)
     {
         int HashValue = HashFunc(NamaProduk);
@@ -69,6 +71,7 @@ public:
         TableHash[HashValue].push_back(new HashNode(KategoriProduk, NamaProduk, HargaProduk, StokProduk));
     }
 
+    //dhimas, nanda, joshua
     bool CekNamaProduk(string NamaProduk)
     {
         int HashValue = HashFunc(NamaProduk);
@@ -91,6 +94,7 @@ public:
         return ketemu;
     }
 
+    //dhimas
     void UpdateProduk(string KategoriProduk, string NamaProduk, double HargaProduk, int StokProduk)
     {
         int HashValue = HashFunc(NamaProduk);
@@ -113,22 +117,7 @@ public:
         }
     }
 
-    double TambahHargaProduk(string NamaProduk)
-    {
-        double Harga;
-        int HashValue = HashFunc(NamaProduk);
-
-        for (auto node : TableHash[HashValue])
-        {
-            if (node->Nama == NamaProduk)
-            {
-                Harga = node->Harga;
-            }
-        }
-
-        return Harga;
-    }
-
+    //dhimas
     void HapusProduk(string NamaProduk)
     {
         int HashValue = HashFunc(NamaProduk);
@@ -148,6 +137,7 @@ public:
         }
     }
 
+    //nanda
     void SearchByPrice(double HargaMin, double HargaMax)
     {
         bool ketemu = false;
@@ -174,6 +164,7 @@ public:
         }
     }
 
+    //nanda
     void SearchByProductName(string NamaProduk)
     {
         bool ketemu = false;
@@ -200,6 +191,7 @@ public:
         }
     }
 
+    //dhimas
     void TampilProdukAdmin()
     {
         cout << "-----------------------------------------------------------------" << endl;
@@ -216,6 +208,7 @@ public:
         cout << endl;
     }
 
+    //nanda, joshua
     void TampilProdukCustomer()
     {
         cout << "------------------------------------------------------" << endl;
@@ -232,6 +225,7 @@ public:
         cout << endl;
     }
 
+    //joshua
     // Metode untuk mendapatkan informasi produk berdasarkan nama
     HashNode *GetProdukByName(string NamaProduk)
     {
@@ -247,6 +241,7 @@ public:
     }
 };
 
+//dhimas
 bool LoginUserAdmin(string UsernameAdmin, string PasswordAdmin, bool &PasswordAdminValid, bool &UsernameAdminValid)
 {
     UsernameAdminValid = true;
@@ -290,6 +285,7 @@ bool LoginUserAdmin(string UsernameAdmin, string PasswordAdmin, bool &PasswordAd
     return UsernameAdminValid && PasswordAdminValid;
 }
 
+//nanda 
 bool LoginUserCustomer(string UsernameCustomer, string PasswordCustomer, bool &PasswordCustomerValid, bool &UsernameCustomerValid)
 {
     UsernameCustomerValid = true;
@@ -348,6 +344,7 @@ bool LoginUserCustomer(string UsernameCustomer, string PasswordCustomer, bool &P
     return UsernameCustomerValid && PasswordCustomerValid;
 }
 
+//joshua
 double HargaDiskon(double TotalHarga) {
     double HargaDiskon;
     HargaDiskon = TotalHarga * 0.15;
